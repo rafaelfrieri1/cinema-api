@@ -1,17 +1,41 @@
+import com.typesafe.config.ConfigFactory
+
 name := """cinema-api"""
 organization := "com.rafael"
 
 version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
+lazy val slick = taskKey[Seq[File]]("Generate Tables.scala")
+
+val conf = ConfigFactory.parseFile(new File("conf/application.conf")).resolve()
 
 scalaVersion := "2.13.7"
 
-libraryDependencies += guice
-libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test
+libraryDependencies ++= Seq(
+  guice,
+  "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test,
+  "com.typesafe.play" %% "play-slick" % "4.0.2",
+  "com.typesafe.play" %% "play-slick-evolutions" % "4.0.2",
+  "mysql" % "mysql-connector-java" % "8.0.16"
+)
 
-// Adds additional packages into Twirl
-//TwirlKeys.templateImports += "com.rafael.controllers._"
+slick := {
+  val classPath = (dependencyClasspath in Compile).value
+  val r = (runner in Compile).value
+  val s = streams.value
 
-// Adds additional packages into conf/routes
-// play.sbt.routes.RoutesKeys.routesImport += "com.rafael.binders._"
+  val outputDir = "app"
+
+  val profile = conf.getString("slick.dbs.default.profile").dropRight(1)
+  val url = conf.getString("slick.dbs.default.db.url")
+  val jdbcDriver = conf.getString("slick.dbs.default.db.driver")
+  val user = conf.getString("slick.dbs.default.db.user")
+  val password = conf.getString("slick.dbs.default.db.password")
+
+  val pkg = "models"
+
+  r.run("slick.codegen.SourceCodeGenerator", classPath.files, Array(profile, jdbcDriver, url, outputDir, pkg, user, password), s.log).failed foreach (sys error _.getMessage)
+  val fname = outputDir + s"/$pkg/Tables.scala"
+  Seq(file(fname))
+}
