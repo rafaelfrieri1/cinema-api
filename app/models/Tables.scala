@@ -14,7 +14,7 @@ trait Tables {
   import slick.jdbc.{GetResult => GR}
 
   /** DDL for all tables. Call .create to execute. */
-  lazy val schema: profile.SchemaDescription = Movies.schema ++ PlayEvolutions.schema
+  lazy val schema: profile.SchemaDescription = Movies.schema ++ MovieShowDetails.schema ++ PlayEvolutions.schema
   @deprecated("Use .schema instead of .ddl", "3.0")
   def ddl = schema
 
@@ -52,6 +52,47 @@ trait Tables {
   }
   /** Collection-like TableQuery object for table Movies */
   lazy val Movies = new TableQuery(tag => new Movies(tag))
+
+  /** Entity class storing rows of table MovieShowDetails
+   *  @param id Database column id SqlType(INT), AutoInc, PrimaryKey
+   *  @param movieId Database column movie_id SqlType(INT)
+   *  @param showTime Database column show_time SqlType(TIMESTAMP)
+   *  @param price Database column price SqlType(DECIMAL), Default(None)
+   *  @param active Database column active SqlType(BIT), Default(true)
+   *  @param created Database column created SqlType(TIMESTAMP)
+   *  @param deleted Database column deleted SqlType(TIMESTAMP), Default(None) */
+  case class MovieShowDetailsRow(id: Int, movieId: Int, showTime: java.sql.Timestamp, price: Option[scala.math.BigDecimal] = None, active: Boolean = true, created: java.sql.Timestamp, deleted: Option[java.sql.Timestamp] = None)
+  /** GetResult implicit for fetching MovieShowDetailsRow objects using plain SQL queries */
+  implicit def GetResultMovieShowDetailsRow(implicit e0: GR[Int], e1: GR[java.sql.Timestamp], e2: GR[Option[scala.math.BigDecimal]], e3: GR[Boolean], e4: GR[Option[java.sql.Timestamp]]): GR[MovieShowDetailsRow] = GR{
+    prs => import prs._
+    MovieShowDetailsRow.tupled((<<[Int], <<[Int], <<[java.sql.Timestamp], <<?[scala.math.BigDecimal], <<[Boolean], <<[java.sql.Timestamp], <<?[java.sql.Timestamp]))
+  }
+  /** Table description of table movie_show_details. Objects of this class serve as prototypes for rows in queries. */
+  class MovieShowDetails(_tableTag: Tag) extends profile.api.Table[MovieShowDetailsRow](_tableTag, Some("cinema"), "movie_show_details") {
+    def * = (id, movieId, showTime, price, active, created, deleted) <> (MovieShowDetailsRow.tupled, MovieShowDetailsRow.unapply)
+    /** Maps whole row to an option. Useful for outer joins. */
+    def ? = ((Rep.Some(id), Rep.Some(movieId), Rep.Some(showTime), price, Rep.Some(active), Rep.Some(created), deleted)).shaped.<>({r=>import r._; _1.map(_=> MovieShowDetailsRow.tupled((_1.get, _2.get, _3.get, _4, _5.get, _6.get, _7)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+
+    /** Database column id SqlType(INT), AutoInc, PrimaryKey */
+    val id: Rep[Int] = column[Int]("id", O.AutoInc, O.PrimaryKey)
+    /** Database column movie_id SqlType(INT) */
+    val movieId: Rep[Int] = column[Int]("movie_id")
+    /** Database column show_time SqlType(TIMESTAMP) */
+    val showTime: Rep[java.sql.Timestamp] = column[java.sql.Timestamp]("show_time")
+    /** Database column price SqlType(DECIMAL), Default(None) */
+    val price: Rep[Option[scala.math.BigDecimal]] = column[Option[scala.math.BigDecimal]]("price", O.Default(None))
+    /** Database column active SqlType(BIT), Default(true) */
+    val active: Rep[Boolean] = column[Boolean]("active", O.Default(true))
+    /** Database column created SqlType(TIMESTAMP) */
+    val created: Rep[java.sql.Timestamp] = column[java.sql.Timestamp]("created")
+    /** Database column deleted SqlType(TIMESTAMP), Default(None) */
+    val deleted: Rep[Option[java.sql.Timestamp]] = column[Option[java.sql.Timestamp]]("deleted", O.Default(None))
+
+    /** Foreign key referencing Movies (database name movie_id_fk) */
+    lazy val moviesFk = foreignKey("movie_id_fk", movieId, Movies)(r => r.id, onUpdate=ForeignKeyAction.Cascade, onDelete=ForeignKeyAction.NoAction)
+  }
+  /** Collection-like TableQuery object for table MovieShowDetails */
+  lazy val MovieShowDetails = new TableQuery(tag => new MovieShowDetails(tag))
 
   /** Entity class storing rows of table PlayEvolutions
    *  @param id Database column id SqlType(INT), PrimaryKey
