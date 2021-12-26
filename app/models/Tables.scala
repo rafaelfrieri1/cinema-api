@@ -56,16 +56,16 @@ trait Tables {
   /** Entity class storing rows of table MovieShowDetails
    *  @param id Database column id SqlType(INT), AutoInc, PrimaryKey
    *  @param movieId Database column movie_id SqlType(INT)
-   *  @param showTime Database column show_time SqlType(TIMESTAMP)
+   *  @param showTime Database column show_time SqlType(TIME)
    *  @param price Database column price SqlType(DECIMAL), Default(None)
    *  @param active Database column active SqlType(BIT), Default(true)
    *  @param created Database column created SqlType(TIMESTAMP)
    *  @param deleted Database column deleted SqlType(TIMESTAMP), Default(None) */
-  case class MovieShowDetailsRow(id: Int, movieId: Int, showTime: java.sql.Timestamp, price: Option[scala.math.BigDecimal] = None, active: Boolean = true, created: java.sql.Timestamp, deleted: Option[java.sql.Timestamp] = None)
+  case class MovieShowDetailsRow(id: Int, movieId: Int, showTime: java.sql.Time, price: Option[scala.math.BigDecimal] = None, active: Boolean = true, created: java.sql.Timestamp, deleted: Option[java.sql.Timestamp] = None)
   /** GetResult implicit for fetching MovieShowDetailsRow objects using plain SQL queries */
-  implicit def GetResultMovieShowDetailsRow(implicit e0: GR[Int], e1: GR[java.sql.Timestamp], e2: GR[Option[scala.math.BigDecimal]], e3: GR[Boolean], e4: GR[Option[java.sql.Timestamp]]): GR[MovieShowDetailsRow] = GR{
+  implicit def GetResultMovieShowDetailsRow(implicit e0: GR[Int], e1: GR[java.sql.Time], e2: GR[Option[scala.math.BigDecimal]], e3: GR[Boolean], e4: GR[java.sql.Timestamp], e5: GR[Option[java.sql.Timestamp]]): GR[MovieShowDetailsRow] = GR{
     prs => import prs._
-    MovieShowDetailsRow.tupled((<<[Int], <<[Int], <<[java.sql.Timestamp], <<?[scala.math.BigDecimal], <<[Boolean], <<[java.sql.Timestamp], <<?[java.sql.Timestamp]))
+    MovieShowDetailsRow.tupled((<<[Int], <<[Int], <<[java.sql.Time], <<?[scala.math.BigDecimal], <<[Boolean], <<[java.sql.Timestamp], <<?[java.sql.Timestamp]))
   }
   /** Table description of table movie_show_details. Objects of this class serve as prototypes for rows in queries. */
   class MovieShowDetails(_tableTag: Tag) extends profile.api.Table[MovieShowDetailsRow](_tableTag, Some("cinema"), "movie_show_details") {
@@ -77,8 +77,8 @@ trait Tables {
     val id: Rep[Int] = column[Int]("id", O.AutoInc, O.PrimaryKey)
     /** Database column movie_id SqlType(INT) */
     val movieId: Rep[Int] = column[Int]("movie_id")
-    /** Database column show_time SqlType(TIMESTAMP) */
-    val showTime: Rep[java.sql.Timestamp] = column[java.sql.Timestamp]("show_time")
+    /** Database column show_time SqlType(TIME) */
+    val showTime: Rep[java.sql.Time] = column[java.sql.Time]("show_time")
     /** Database column price SqlType(DECIMAL), Default(None) */
     val price: Rep[Option[scala.math.BigDecimal]] = column[Option[scala.math.BigDecimal]]("price", O.Default(None))
     /** Database column active SqlType(BIT), Default(true) */
