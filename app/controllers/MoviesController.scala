@@ -57,4 +57,10 @@ class MoviesController @Inject()(
       .recover { case exception: ApiException => apiExceptionToResult(exception) }
   }
 
+  def checkMovieDetails(movieId: Int): Action[AnyContent] = Action.async { implicit request =>
+    movieService.checkMovieDetails(movieId)
+      .map(movieDetails => Ok(Json.toJson(movieDetails)))
+      .recover {case exception: ApiException => apiExceptionToResult(exception) }
+  }
+
 }

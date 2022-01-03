@@ -157,3 +157,30 @@ PUT    /:movieId/movie-show-details/:movieShowTimeId                           c
 #                   $ref: '#/definitions/models.ExceptionDTO'
 ###
 DELETE    /:movieId/movie-show-details/:movieShowTimeId                        controllers.MoviesController.deleteMovieShowTime(movieId: Int, movieShowTimeId: Int)
+
+###
+#       tags:
+#           - Movies
+#       summary: Get details about a specified movie ID
+#       description: Returns a MovieDetailsDTO with the details of the movie
+#       produces:
+#           - application/json
+#       schemes:
+#           - https
+#       parameters:
+#           - name: movieId
+#             in: path
+#             description: Id of the movie whose details will be fetched
+#             required: true
+#             type: int
+#       responses:
+#           '200':
+#               description: Movie details fetched successfully
+#               schema:
+#                   type: MovieDetailsDTO
+#           '404':
+#               description: Movie ID  not found
+#               schema:
+#                   $ref: '#/definitions/models.ExceptionDTO'
+###
+GET    /:movieId/movie-details                                                 controllers.MoviesController.checkMovieDetails(movieId: Int)

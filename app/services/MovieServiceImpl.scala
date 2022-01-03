@@ -5,16 +5,22 @@ import javax.inject.Inject
 import models._
 import models.Tables.{MoviesRow, MovieShowDetailsRow}
 import play.api.Configuration
+import play.api.libs.ws.WSClient
 
 import java.sql.Time
 import java.sql.Timestamp
 import java.time.{LocalDate, LocalDateTime, LocalTime, ZoneId, ZoneOffset}
 import scala.concurrent.{ExecutionContext, Future}
+import scala.math.BigDecimal
 
 class MovieServiceImpl @Inject()(
   movieModel: MovieModel,
-  movieShowDetailModel: MovieShowDetailModel
+  movieShowDetailModel: MovieShowDetailModel,
+  wsClient: WSClient
 )(implicit ec: ExecutionContext, configuration: Configuration) extends MovieService {
+
+  private val omdbApiBaseUrl = configuration.get[String]("omdb.api.baseUrl")
+  private val omdbApiKey = configuration.get[String]("omdb.api.key")
 
   def addMovieShowTime(movieId: Int, showTime: LocalTime, price: BigDecimal): Future[Int] = {
     val showTimeAdjusted = LocalDateTime.of(LocalDate.now(), showTime)
@@ -112,6 +118,31 @@ class MovieServiceImpl @Inject()(
         )
       )
     } yield movieShowDetails
+  }
+
+  def checkMovieDetails(movieId: Int): Future[MovieDetailsDTO] = {
+    val omdbUrl = s"$omdbApiBaseUrl/?apiKey=$omdbApiKey&i="
+
+    movieModel.findById(movieId).flatMap {
+      case Some(movie) =>
+        wsClient.url(s"$omdbUrl${movie.imdbId}")
+          .get()
+          .map(response => {
+            response.status match {
+              case 200 =>
+                MovieDetailsDTO(
+                  name = (response.json \ "Title").get.as[String],
+                  description = (response.json \ "Plot").get.as[String],
+                  releaseDate = (response.json \ "Released").get.as[String],
+                  metaScore = (response.json \ "Metascore").get.as[BigDecimal],
+                  imdbRating = (response.json \ "imdbRating").get.as[BigDecimal],
+                  runTime = (response.json \ "Runtime").get.as[String]
+                )
+              case _ => throw new IllegalStateException(s"Unexpected response. ${response.status} - ${response.statusText}")
+            }
+          })
+      case None => throw new MovieNotFoundException()
+    }
   }
 
   private def checkMovieExists(movieId: Int): Future[Boolean] = {

@@ -8,4 +8,5 @@ object DTOOperations {
   implicit val movieShowDetailRetrievedDTOJsonWrites: Writes[MovieShowDetailRetrievedDTO] = Json.writes[MovieShowDetailRetrievedDTO]
   implicit val movieShowDetailsDTOJsonWrites: Writes[MovieShowDetailsDTO] = Json.writes[MovieShowDetailsDTO]
   implicit val movieShowDetailEditDTOJsonReads: Reads[MovieShowDetailEditDTO] = Json.reads[MovieShowDetailEditDTO]
+  implicit val movieDetailsDTOJsonWrites: Writes[MovieDetailsDTO] = Json.writes[MovieDetailsDTO]
 }

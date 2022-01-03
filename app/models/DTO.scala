@@ -31,3 +31,12 @@ case class MovieShowDetailEditDTO(
   showTime: Option[LocalTime],
   price: Option[BigDecimal]
 )
+
+case class MovieDetailsDTO(
+  name: String,
+  description: String,
+  releaseDate: String,
+  metaScore: BigDecimal,
+  imdbRating: BigDecimal,
+  runTime: String
+)

@@ -14,6 +14,7 @@ scalaVersion := "2.13.7"
 
 libraryDependencies ++= Seq(
   guice,
+  ws,
   "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test,
   "com.typesafe.play" %% "play-slick" % "4.0.2",
   "com.typesafe.play" %% "play-slick-evolutions" % "4.0.2",
