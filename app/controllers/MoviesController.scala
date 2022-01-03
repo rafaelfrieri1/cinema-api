@@ -95,4 +95,10 @@ class MoviesController @Inject()(
     }
   }
 
+  def deleteMovieRating(movieId: Int, movieRatingId: Int): Action[AnyContent] = Action.async { implicit request =>
+    movieService.deleteMovieRating(movieId, movieRatingId)
+      .map(_ => Ok(Json.toJson("ok")))
+      .recover { case exception: ApiException => apiExceptionToResult(exception) }
+  }
+
 }

@@ -134,19 +134,19 @@ PUT    /:movieId/movie-show-details/:movieShowTimeId                           c
 #       parameters:
 #           - name: movieId
 #             in: path
-#             description: Id of the movie whose show time will be edited
+#             description: Id of the movie whose show time will be deleted
 #             required: true
 #             type: int
 #           - name: movieShowDetailId
 #             in: path
-#             description: Id of the movie show time that will be edited
+#             description: Id of the movie show time that will be deleted
 #             required: true
 #             type: int
 #       responses:
 #           '200':
 #               description: Movie show time deleted successfully
 #               schema:
-#                   type: MovieShowTimeRetrievedDTO
+#                   type: String
 #           '400':
 #               description: The show time detail selected is not from the movie selected
 #               schema:
@@ -284,3 +284,39 @@ GET   /:movieId/movie-ratings                                                  c
 #                   $ref: '#/definitions/models.ExceptionDTO'
 ###
 PUT    /:movieId/movie-ratings/:movieRatingId                                  controllers.MoviesController.editMovieRating(movieId: Int, movieRatingId: Int)
+
+###
+#       tags:
+#           - Movies
+#       summary: Soft delete an existing rating
+#       description: Returns "ok" if the rating was deleted successfully
+#       produces:
+#           - application/json
+#       schemes:
+#           - https
+#       parameters:
+#           - name: movieId
+#             in: path
+#             description: Id of the movie whose rating will be deleted
+#             required: true
+#             type: int
+#           - name: movieRatingId
+#             in: path
+#             description: Id of the movie rating that will be deleted
+#             required: true
+#             type: int
+#       responses:
+#           '200':
+#               description: Movie show time deleted successfully
+#               schema:
+#                   type: String
+#           '400':
+#               description: The rating selected is not from the movie selected
+#               schema:
+#                   $ref: '#/definitions/models.ExceptionDTO'
+#           '404':
+#               description: Movie ID or rating ID not found
+#               schema:
+#                   $ref: '#/definitions/models.ExceptionDTO'
+###
+DELETE    /:movieId/movie-ratings/:movieRatingId                               controllers.MoviesController.deleteMovieRating(movieId: Int, movieRatingId: Int)

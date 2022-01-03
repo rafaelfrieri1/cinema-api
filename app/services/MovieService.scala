@@ -21,4 +21,5 @@ trait MovieService {
   def addMovieRating(movieId: Int, rating: Int): Future[Int]
   def getMovieRatings(movieId: Int): Future[MovieRatingsDTO]
   def editMovieRating(movieId: Int, movieRatingId: Int, rating: Option[Int]): Future[MovieRatingRetrievedDTO]
+  def deleteMovieRating(movieId: Int, movieRatingId: Int): Future[Unit]
 }

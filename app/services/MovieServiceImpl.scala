@@ -208,6 +208,25 @@ class MovieServiceImpl @Inject()(
       )
   }
 
+  def deleteMovieRating(movieId: Int, movieRatingId: Int): Future[Unit] = {
+    for {
+      movieOption <- movieModel.findById(movieId)
+      movie = movieOption.getOrElse(throw new MovieNotFoundException())
+      movieRatingOption <- movieRatingModel.findById(movieRatingId)
+      movieRating = movieRatingOption.getOrElse(throw new MovieRatingNotFoundException())
+      _ <- checkRatingBelongsToMovie(movie, movieRating) match {
+        case true => movieRatingModel.update(
+          movieRatingId,
+          movieRating.copy(
+            active = false,
+            deleted = Some(new Timestamp(System.currentTimeMillis()))
+          )
+        )
+        case false => throw new MovieRatingNotBelongsToMovieException()
+      }
+    } yield ()
+  }
+
   private def checkMovieExists(movieId: Int): Future[Boolean] = {
     movieModel.findById(movieId).map {
       case Some(movie) => true
