@@ -209,10 +209,37 @@ GET    /:movieId/movie-details                                                 c
 #           '200':
 #               description: Movie rating added successfully
 #               schema:
-#                   type: MovieDetailsDTO
+#                   type: Int
 #           '404':
 #               description: Movie ID  not found
 #               schema:
 #                   $ref: '#/definitions/models.ExceptionDTO'
 ###
 POST   /:movieId/movie-ratings                                                 controllers.MoviesController.addMovieRating(movieId: Int)
+
+###
+#       tags:
+#           - Movies
+#       summary: Get the list of ratings of an existing movie
+#       description: Returns MovieRatingsDTO with the list of the ratings of the movies
+#       produces:
+#           - application/json
+#       schemes:
+#           - https
+#       parameters:
+#           - name: movieId
+#             in: path
+#             description: Id of the movie from which the ratings will be retrieved
+#             required: true
+#             type: int
+#       responses:
+#           '200':
+#               description: Movie ratings retrieved successfully
+#               schema:
+#                   type: MovieRatingsDTO
+#           '404':
+#               description: Movie ID  not found
+#               schema:
+#                   $ref: '#/definitions/models.ExceptionDTO'
+###
+GET   /:movieId/movie-ratings                                                  controllers.MoviesController.getMovieRatings(movieId: Int)

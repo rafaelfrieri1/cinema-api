@@ -52,3 +52,13 @@ object MovieRatingDTO {
   def validateRating(movieRating: MovieRatingDTO): Boolean = validRatings.contains(movieRating.rating)
 
 }
+
+case class MovieRatingRetrievedDTO(
+  id: Int,
+  rating: BigDecimal
+)
+
+case class MovieRatingsDTO(
+  name: String,
+  movieRatings: Seq[MovieRatingRetrievedDTO]
+)

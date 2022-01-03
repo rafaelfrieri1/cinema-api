@@ -35,7 +35,7 @@ class MoviesController @Inject()(
   def getMovieShowTimes(movieId: Int): Action[AnyContent] = Action.async { implicit request =>
     movieService.getMovieShowTimes(movieId)
       .map(movieShowDetails => Ok(Json.toJson(movieShowDetails)))
-      .recover {case exception: ApiException => apiExceptionToResult(exception) }
+      .recover { case exception: ApiException => apiExceptionToResult(exception) }
   }
 
   def editMovieShowTime(movieId: Int, movieShowTimeId: Int): Action[JsValue] = Action.async(parse.json) { implicit request =>
@@ -60,7 +60,7 @@ class MoviesController @Inject()(
   def checkMovieDetails(movieId: Int): Action[AnyContent] = Action.async { implicit request =>
     movieService.checkMovieDetails(movieId)
       .map(movieDetails => Ok(Json.toJson(movieDetails)))
-      .recover {case exception: ApiException => apiExceptionToResult(exception) }
+      .recover { case exception: ApiException => apiExceptionToResult(exception) }
   }
 
   def addMovieRating(movieId: Int): Action[JsValue] = Action.async(parse.json) { implicit request =>
@@ -71,9 +71,15 @@ class MoviesController @Inject()(
         exception => Future.successful(apiExceptionToResult(exception)),
         data => movieService.addMovieRating(movieId, data.rating)
           .map(movieRatingId => Ok(Json.toJson(movieRatingId)))
-          .recover {case exception: ApiException => apiExceptionToResult(exception) }
+          .recover { case exception: ApiException => apiExceptionToResult(exception) }
       )
     }
+  }
+
+  def getMovieRatings(movieId: Int): Action[AnyContent] = Action.async { implicit request =>
+    movieService.getMovieRatings(movieId)
+      .map(movieRatings => Ok(Json.toJson(movieRatings)))
+      .recover { case exception: ApiException => apiExceptionToResult(exception) }
   }
 
 }

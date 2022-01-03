@@ -1,6 +1,6 @@
 package services
 
-import models.{MovieDetailsDTO, MovieShowDetailsDTO, MovieShowDetailRetrievedDTO}
+import models.{MovieDetailsDTO, MovieRatingsDTO, MovieShowDetailsDTO, MovieShowDetailRetrievedDTO}
 
 import java.time.LocalTime
 
@@ -19,4 +19,5 @@ trait MovieService {
   def getMovieShowTimes(movieId: Int): Future[MovieShowDetailsDTO]
   def checkMovieDetails(movieId: Int): Future[MovieDetailsDTO]
   def addMovieRating(movieId: Int, rating: Int): Future[Int]
+  def getMovieRatings(movieId: Int): Future[MovieRatingsDTO]
 }

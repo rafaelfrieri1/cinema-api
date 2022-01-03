@@ -163,6 +163,23 @@ class MovieServiceImpl @Inject()(
     } yield movieRatingId
   }
 
+  def getMovieRatings(movieId: Int): Future[MovieRatingsDTO] = {
+    for {
+      movieOption <- movieModel.findById(movieId)
+      movie = movieOption.getOrElse(throw new MovieNotFoundException())
+      movieRatingsRows <- movieRatingModel.findByMovieId(movieId)
+      movieRatings = MovieRatingsDTO(
+        name = movie.name,
+        movieRatings = movieRatingsRows.map(movieRatingRow =>
+          MovieRatingRetrievedDTO(
+            id = movieRatingRow.id,
+            rating = movieRatingRow.rating
+          )
+        )
+      )
+    } yield movieRatings
+  }
+
   private def checkMovieExists(movieId: Int): Future[Boolean] = {
     movieModel.findById(movieId).map {
       case Some(movie) => true
