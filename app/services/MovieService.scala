@@ -9,6 +9,7 @@ import scala.math.BigDecimal
 
 trait MovieService {
   def addMovieShowTime(movieId: Int, showTime: LocalTime, price: BigDecimal): Future[Int]
+  def deleteMovieShowTime(movieId: Int, movieShowTimeId: Int): Future[Unit]
   def editMovieShowTime(
     movieId: Int,
     movieShowTimeId: Int,

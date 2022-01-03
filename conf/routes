@@ -121,3 +121,39 @@ GET    /:movieId/movie-show-details                                            c
 #                   $ref: '#/definitions/models.ExceptionDTO'
 ###
 PUT    /:movieId/movie-show-details/:movieShowTimeId                           controllers.MoviesController.editMovieShowTime(movieId: Int, movieShowTimeId: Int)
+
+###
+#       tags:
+#           - Movies
+#       summary: Soft delete an existing show time
+#       description: Returns "ok" if the show time was deleted successfully
+#       produces:
+#           - application/json
+#       schemes:
+#           - https
+#       parameters:
+#           - name: movieId
+#             in: path
+#             description: Id of the movie whose show time will be edited
+#             required: true
+#             type: int
+#           - name: movieShowDetailId
+#             in: path
+#             description: Id of the movie show time that will be edited
+#             required: true
+#             type: int
+#       responses:
+#           '200':
+#               description: Movie show time deleted successfully
+#               schema:
+#                   type: MovieShowTimeRetrievedDTO
+#           '400':
+#               description: The show time detail selected is not from the movie selected
+#               schema:
+#                   $ref: '#/definitions/models.ExceptionDTO'
+#           '404':
+#               description: Movie ID or movie show time detail ID not found
+#               schema:
+#                   $ref: '#/definitions/models.ExceptionDTO'
+###
+DELETE    /:movieId/movie-show-details/:movieShowTimeId                        controllers.MoviesController.deleteMovieShowTime(movieId: Int, movieShowTimeId: Int)

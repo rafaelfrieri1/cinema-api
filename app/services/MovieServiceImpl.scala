@@ -45,6 +45,25 @@ class MovieServiceImpl @Inject()(
     } yield movieShowDetailId
   }
 
+  def deleteMovieShowTime(movieId: Int, movieShowTimeId: Int): Future[Unit] = {
+    for {
+      movieOption <- movieModel.findById(movieId)
+      movie = movieOption.getOrElse(throw new MovieNotFoundException())
+      movieShowDetailOption <- movieShowDetailModel.findById(movieShowTimeId)
+      movieShowDetail = movieShowDetailOption.getOrElse(throw new MovieShowDetailNotFoundException())
+      _ <- checkShowDetailBelongsToMovie(movie, movieShowDetail) match {
+        case true => movieShowDetailModel.update(
+          movieShowTimeId,
+          movieShowDetail.copy(
+            active = false,
+            deleted = Some(new Timestamp(System.currentTimeMillis()))
+          )
+        )
+        case false => throw new MovieShowDetailNotBelongsToMovieException()
+      }
+    } yield ()
+  }
+
   def editMovieShowTime(
     movieId: Int,
     movieShowTimeId: Int,
