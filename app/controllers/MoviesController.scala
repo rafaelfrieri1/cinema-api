@@ -32,4 +32,10 @@ class MoviesController @Inject()(
     }
   }
 
+  def getMovieShowTimes(movieId: Int): Action[AnyContent] = Action.async { implicit request =>
+    movieService.getMovieShowTimes(movieId)
+      .map(movieShowDetails => Ok(Json.toJson(movieShowDetails)))
+      .recover {case exception: ApiException => apiExceptionToResult(exception) }
+  }
+
 }

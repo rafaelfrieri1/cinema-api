@@ -20,7 +20,11 @@ class MovieShowDetailModelImpl @Inject() (
 
   private def filterById(id: Int): Query[MovieShowDetails, MovieShowDetailsRow, Seq] = movieShowDetails.filter(msd => getId(msd) === id)
 
-  def add(movieShowDetail: MovieShowDetailsRow): Future[Int] = db run ((movieShowDetails returning movieShowDetails.map(getId)) += movieShowDetail)
+  def add(movieShowDetail: MovieShowDetailsRow): Future[Int] =
+    db run ((movieShowDetails returning movieShowDetails.map(getId)) += movieShowDetail)
+
+  def findByMovieId(movieId: Int): Future[Seq[MovieShowDetailsRow]] =
+    db run movieShowDetails.filter(msd => msd.movieId === movieId && msd.active).result
 
   def findByShowTime(movieShowTime: Time): Future[Option[MovieShowDetailsRow]] =
     db run movieShowDetails.filter(msd => msd.showTime === movieShowTime && msd.active).result.headOption

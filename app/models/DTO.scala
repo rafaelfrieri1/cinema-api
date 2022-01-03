@@ -15,3 +15,14 @@ case class MovieShowDetailDTO(
   showTime: LocalTime,
   price: BigDecimal
 )
+
+case class MovieShowDetailRetrievedDTO(
+  id: Int,
+  showTime: LocalTime,
+  price: BigDecimal
+)
+
+case class MovieShowDetailsDTO(
+  name: String,
+  showDetails: Seq[MovieShowDetailRetrievedDTO]
+)

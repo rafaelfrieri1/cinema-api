@@ -38,9 +38,40 @@ GET     /assets/*file                                                           
 #               description: Id of the created movie show detail
 #               schema:
 #                   type: Int
+#           '400':
+#               description: Body does not have the correct format or movie show time already exists
+#               schema:
+#                   $ref: '#/definitions/models.ExceptionDTO'
 #           '404':
 #               description: Movie ID not found
 #               schema:
 #                   $ref: '#/definitions/models.ExceptionDTO'
 ###
 POST    /:movieId/movie-show-details                                                               controllers.MoviesController.addMovieShowTime(movieId: Int)
+
+###
+#       tags:
+#           - Movies
+#       summary: Retrieves all the show times for an existing movie
+#       description: Returns a MovieShowDetailsDTO that contains the name and show times of the movie
+#       produces:
+#           - application/json
+#       schemes:
+#           - https
+#       parameters:
+#           - name: movieId
+#             in: path
+#             description: Id of the movie with the new show time
+#             required: true
+#             type: int
+#       responses:
+#           '200':
+#               description: Show details of the selected movie
+#               schema:
+#                   type: MovieShowDetailsDTO
+#           '404':
+#               description: Movie ID not found
+#               schema:
+#                   $ref: '#/definitions/models.ExceptionDTO'
+###
+GET    /:movieId/movie-show-details                                                                controllers.MoviesController.getMovieShowTimes(movieId: Int)

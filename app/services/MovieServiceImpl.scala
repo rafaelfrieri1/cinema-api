@@ -2,7 +2,7 @@ package services
 
 import exceptions._
 import javax.inject.Inject
-import models.{MovieModel, MovieShowDetailModel}
+import models._
 import models.Tables.MovieShowDetailsRow
 import play.api.Configuration
 
@@ -35,7 +35,7 @@ class MovieServiceImpl @Inject()(
               id = 1,
               movieId = movieId,
               showTime = showTimeSQL,
-              price = Some(price),
+              price = price,
               created = new Timestamp(System.currentTimeMillis())
             )
           )
@@ -43,6 +43,24 @@ class MovieServiceImpl @Inject()(
         case (_, true) => throw new MovieShowDetailAlreadyExistsException()
       }
     } yield movieShowDetailId
+  }
+
+  def getMovieShowTimes(movieId: Int): Future[MovieShowDetailsDTO] = {
+    for {
+      movieOption <- movieModel.findById(movieId)
+      movie = movieOption.getOrElse(throw new MovieNotFoundException())
+      movieShowDetailsRows <- movieShowDetailModel.findByMovieId(movieId)
+      movieShowDetails = MovieShowDetailsDTO(
+        name = movie.name,
+        showDetails = movieShowDetailsRows.map(movieShowDetailRow =>
+          MovieShowDetailRetrievedDTO(
+            id = movieShowDetailRow.id,
+            showTime = movieShowDetailRow.showTime.toLocalTime(),
+            price = movieShowDetailRow.price
+          )
+        )
+      )
+    } yield movieShowDetails
   }
 
   private def checkMovieExists(movieId: Int): Future[Boolean] = {
