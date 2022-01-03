@@ -57,21 +57,21 @@ trait Tables {
    *  @param id Database column id SqlType(INT), AutoInc, PrimaryKey
    *  @param movieId Database column movie_id SqlType(INT)
    *  @param showTime Database column show_time SqlType(TIME)
-   *  @param price Database column price SqlType(DECIMAL), Default(None)
+   *  @param price Database column price SqlType(DECIMAL)
    *  @param active Database column active SqlType(BIT), Default(true)
    *  @param created Database column created SqlType(TIMESTAMP)
    *  @param deleted Database column deleted SqlType(TIMESTAMP), Default(None) */
-  case class MovieShowDetailsRow(id: Int, movieId: Int, showTime: java.sql.Time, price: Option[scala.math.BigDecimal] = None, active: Boolean = true, created: java.sql.Timestamp, deleted: Option[java.sql.Timestamp] = None)
+  case class MovieShowDetailsRow(id: Int, movieId: Int, showTime: java.sql.Time, price: scala.math.BigDecimal, active: Boolean = true, created: java.sql.Timestamp, deleted: Option[java.sql.Timestamp] = None)
   /** GetResult implicit for fetching MovieShowDetailsRow objects using plain SQL queries */
-  implicit def GetResultMovieShowDetailsRow(implicit e0: GR[Int], e1: GR[java.sql.Time], e2: GR[Option[scala.math.BigDecimal]], e3: GR[Boolean], e4: GR[java.sql.Timestamp], e5: GR[Option[java.sql.Timestamp]]): GR[MovieShowDetailsRow] = GR{
+  implicit def GetResultMovieShowDetailsRow(implicit e0: GR[Int], e1: GR[java.sql.Time], e2: GR[scala.math.BigDecimal], e3: GR[Boolean], e4: GR[java.sql.Timestamp], e5: GR[Option[java.sql.Timestamp]]): GR[MovieShowDetailsRow] = GR{
     prs => import prs._
-    MovieShowDetailsRow.tupled((<<[Int], <<[Int], <<[java.sql.Time], <<?[scala.math.BigDecimal], <<[Boolean], <<[java.sql.Timestamp], <<?[java.sql.Timestamp]))
+    MovieShowDetailsRow.tupled((<<[Int], <<[Int], <<[java.sql.Time], <<[scala.math.BigDecimal], <<[Boolean], <<[java.sql.Timestamp], <<?[java.sql.Timestamp]))
   }
   /** Table description of table movie_show_details. Objects of this class serve as prototypes for rows in queries. */
   class MovieShowDetails(_tableTag: Tag) extends profile.api.Table[MovieShowDetailsRow](_tableTag, Some("cinema"), "movie_show_details") {
     def * = (id, movieId, showTime, price, active, created, deleted) <> (MovieShowDetailsRow.tupled, MovieShowDetailsRow.unapply)
     /** Maps whole row to an option. Useful for outer joins. */
-    def ? = ((Rep.Some(id), Rep.Some(movieId), Rep.Some(showTime), price, Rep.Some(active), Rep.Some(created), deleted)).shaped.<>({r=>import r._; _1.map(_=> MovieShowDetailsRow.tupled((_1.get, _2.get, _3.get, _4, _5.get, _6.get, _7)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+    def ? = ((Rep.Some(id), Rep.Some(movieId), Rep.Some(showTime), Rep.Some(price), Rep.Some(active), Rep.Some(created), deleted)).shaped.<>({r=>import r._; _1.map(_=> MovieShowDetailsRow.tupled((_1.get, _2.get, _3.get, _4.get, _5.get, _6.get, _7)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
 
     /** Database column id SqlType(INT), AutoInc, PrimaryKey */
     val id: Rep[Int] = column[Int]("id", O.AutoInc, O.PrimaryKey)
@@ -79,8 +79,8 @@ trait Tables {
     val movieId: Rep[Int] = column[Int]("movie_id")
     /** Database column show_time SqlType(TIME) */
     val showTime: Rep[java.sql.Time] = column[java.sql.Time]("show_time")
-    /** Database column price SqlType(DECIMAL), Default(None) */
-    val price: Rep[Option[scala.math.BigDecimal]] = column[Option[scala.math.BigDecimal]]("price", O.Default(None))
+    /** Database column price SqlType(DECIMAL) */
+    val price: Rep[scala.math.BigDecimal] = column[scala.math.BigDecimal]("price")
     /** Database column active SqlType(BIT), Default(true) */
     val active: Rep[Boolean] = column[Boolean]("active", O.Default(true))
     /** Database column created SqlType(TIMESTAMP) */
