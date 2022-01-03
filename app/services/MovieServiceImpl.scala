@@ -3,7 +3,7 @@ package services
 import exceptions._
 import javax.inject.Inject
 import models._
-import models.Tables.{MoviesRow, MovieShowDetailsRow}
+import models.Tables.{MoviesRow, MovieRatingsRow, MovieShowDetailsRow}
 import play.api.Configuration
 import play.api.libs.ws.WSClient
 
@@ -15,6 +15,7 @@ import scala.math.BigDecimal
 
 class MovieServiceImpl @Inject()(
   movieModel: MovieModel,
+  movieRatingModel: MovieRatingModel,
   movieShowDetailModel: MovieShowDetailModel,
   wsClient: WSClient
 )(implicit ec: ExecutionContext, configuration: Configuration) extends MovieService {
@@ -143,6 +144,23 @@ class MovieServiceImpl @Inject()(
           })
       case None => throw new MovieNotFoundException()
     }
+  }
+
+  def addMovieRating(movieId: Int, rating: Int): Future[Int] = {
+    for {
+      movieExistence <- checkMovieExists(movieId)
+      movieRatingId <- movieExistence match {
+        case true => movieRatingModel.add(
+          MovieRatingsRow(
+            id = 1,
+            movieId = movieId,
+            rating = BigDecimal(rating),
+            created = new Timestamp(System.currentTimeMillis())
+          )
+        )
+        case false => throw new MovieNotFoundException()
+      }
+    } yield movieRatingId
   }
 
   private def checkMovieExists(movieId: Int): Future[Boolean] = {

@@ -3,7 +3,7 @@ package controllers
 import javax.inject.Inject
 import exceptions.ApiException
 import helpers.ValidationHelper
-import models.{MovieShowDetailDTO, MovieShowDetailEditDTO}
+import models.{MovieRatingDTO, MovieShowDetailDTO, MovieShowDetailEditDTO}
 import services.MovieService
 import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
@@ -61,6 +61,19 @@ class MoviesController @Inject()(
     movieService.checkMovieDetails(movieId)
       .map(movieDetails => Ok(Json.toJson(movieDetails)))
       .recover {case exception: ApiException => apiExceptionToResult(exception) }
+  }
+
+  def addMovieRating(movieId: Int): Action[JsValue] = Action.async(parse.json) { implicit request =>
+    val body = request.body.validate[MovieRatingDTO]
+
+    validationHelper.validateBody(body).flatMap {
+      _.fold(
+        exception => Future.successful(apiExceptionToResult(exception)),
+        data => movieService.addMovieRating(movieId, data.rating)
+          .map(movieRatingId => Ok(Json.toJson(movieRatingId)))
+          .recover {case exception: ApiException => apiExceptionToResult(exception) }
+      )
+    }
   }
 
 }

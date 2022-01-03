@@ -40,3 +40,15 @@ case class MovieDetailsDTO(
   imdbRating: BigDecimal,
   runTime: String
 )
+
+case class MovieRatingDTO(
+  rating: Int
+)
+
+object MovieRatingDTO {
+
+  private val validRatings = Set(1, 2, 3, 4, 5)
+
+  def validateRating(movieRating: MovieRatingDTO): Boolean = validRatings.contains(movieRating.rating)
+
+}

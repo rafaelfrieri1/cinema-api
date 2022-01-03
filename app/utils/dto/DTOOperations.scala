@@ -9,4 +9,6 @@ object DTOOperations {
   implicit val movieShowDetailsDTOJsonWrites: Writes[MovieShowDetailsDTO] = Json.writes[MovieShowDetailsDTO]
   implicit val movieShowDetailEditDTOJsonReads: Reads[MovieShowDetailEditDTO] = Json.reads[MovieShowDetailEditDTO]
   implicit val movieDetailsDTOJsonWrites: Writes[MovieDetailsDTO] = Json.writes[MovieDetailsDTO]
+  implicit val movieRatingDTOJsonReads: Reads[MovieRatingDTO] = Json.reads[MovieRatingDTO]
+    .filter(JsonValidationError("error.invalid.value", "rating"))(MovieRatingDTO.validateRating)
 }

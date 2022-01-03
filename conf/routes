@@ -184,3 +184,35 @@ DELETE    /:movieId/movie-show-details/:movieShowTimeId                        c
 #                   $ref: '#/definitions/models.ExceptionDTO'
 ###
 GET    /:movieId/movie-details                                                 controllers.MoviesController.checkMovieDetails(movieId: Int)
+
+###
+#       tags:
+#           - Movies
+#       summary: Adds a rating to an existing movie
+#       description: Returns the id of the new rating
+#       produces:
+#           - application/json
+#       schemes:
+#           - https
+#       parameters:
+#           - name: movieId
+#             in: path
+#             description: Id of the movie that will receive the rating
+#             required: true
+#             type: int
+#           - name: rating
+#             in: body
+#             description: Rating given to the movie
+#             required: true
+#             type: int
+#       responses:
+#           '200':
+#               description: Movie rating added successfully
+#               schema:
+#                   type: MovieDetailsDTO
+#           '404':
+#               description: Movie ID  not found
+#               schema:
+#                   $ref: '#/definitions/models.ExceptionDTO'
+###
+POST   /:movieId/movie-ratings                                                 controllers.MoviesController.addMovieRating(movieId: Int)

@@ -18,4 +18,5 @@ trait MovieService {
   ): Future[MovieShowDetailRetrievedDTO]
   def getMovieShowTimes(movieId: Int): Future[MovieShowDetailsDTO]
   def checkMovieDetails(movieId: Int): Future[MovieDetailsDTO]
+  def addMovieRating(movieId: Int, rating: Int): Future[Int]
 }
