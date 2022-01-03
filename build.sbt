@@ -18,7 +18,8 @@ libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play-slick" % "4.0.2",
   "com.typesafe.play" %% "play-slick-evolutions" % "4.0.2",
   "com.typesafe.slick" %% "slick-codegen" % "3.3.3",
-  "mysql" % "mysql-connector-java" % "8.0.16"
+  "mysql" % "mysql-connector-java" % "8.0.16",
+  "net.codingwell" %% "scala-guice" % "4.2.5"
 )
 
 slick := {
