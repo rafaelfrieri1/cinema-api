@@ -1,1 +1,4 @@
 # https://www.playframework.com/documentation/latest/ScalaI18N
+error.invalid.data = Invalid body data!
+error.movie.not.found = Movie not found!
+error.movie.show.detail.already.exists = Movie show detail already exists
