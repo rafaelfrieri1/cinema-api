@@ -3,7 +3,44 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     /                           controllers.HomeController.index()
+GET     /                                                                                          controllers.HomeController.index()
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+GET     /assets/*file                                                                              controllers.Assets.versioned(path="/public", file: Asset)
+
+###
+#       tags:
+#           - Movies
+#       summary: Adds a show time to an existing movie
+#       description: Returns the id of the new show time
+#       produces:
+#           - application/json
+#       schemes:
+#           - https
+#       parameters:
+#           - name: movieId
+#             in: path
+#             description: Id of the movie with the new show time
+#             required: true
+#             type: int
+#           - name: showTime
+#             in: body
+#             description: Show time of the movie
+#             required: true
+#             type: LocalTime
+#           - name: price
+#             in: body
+#             description: Price of the movie show time
+#             required: true
+#             type: BigDecimal
+#       responses:
+#           '200':
+#               description: Id of the created movie show detail
+#               schema:
+#                   type: Int
+#           '404':
+#               description: Movie ID not found
+#               schema:
+#                   $ref: '#/definitions/models.ExceptionDTO'
+###
+POST    /:movieId/movie-show-details                                                               controllers.MoviesController.addMovieShowTime(movieId: Int)
