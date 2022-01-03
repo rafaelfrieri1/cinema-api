@@ -2,3 +2,5 @@
 error.invalid.data = Invalid body data!
 error.movie.not.found = Movie not found!
 error.movie.show.detail.already.exists = Movie show detail already exists
+error.movie.show.detail.not.found = Movie show detail not found!
+error.movie.show.detail.does.not.belongs.to.movie = Movie show detail does not belongs to movie!

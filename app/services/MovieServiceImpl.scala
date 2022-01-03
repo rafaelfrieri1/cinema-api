@@ -3,7 +3,7 @@ package services
 import exceptions._
 import javax.inject.Inject
 import models._
-import models.Tables.MovieShowDetailsRow
+import models.Tables.{MoviesRow, MovieShowDetailsRow}
 import play.api.Configuration
 
 import java.sql.Time
@@ -45,6 +45,38 @@ class MovieServiceImpl @Inject()(
     } yield movieShowDetailId
   }
 
+  def editMovieShowTime(
+    movieId: Int,
+    movieShowTimeId: Int,
+    showTime: Option[LocalTime],
+    price: Option[BigDecimal]
+  ): Future[MovieShowDetailRetrievedDTO] = {
+    for {
+      movieOption <- movieModel.findById(movieId)
+      movie = movieOption.getOrElse(throw new MovieNotFoundException())
+      movieShowDetailOption <- movieShowDetailModel.findById(movieShowTimeId)
+      movieShowDetail = movieShowDetailOption.getOrElse(throw new MovieShowDetailNotFoundException())
+      _ <- checkShowDetailBelongsToMovie(movie, movieShowDetail) match {
+        case true => movieShowDetailModel.update(
+          movieShowTimeId,
+          movieShowDetail.copy(
+            showTime = showTime match {
+              case Some(showTime) => Time.valueOf(showTime)
+              case None => movieShowDetail.showTime
+            },
+            price = price.getOrElse(movieShowDetail.price)
+          )
+        )
+        case false => throw new MovieShowDetailNotBelongsToMovieException()
+      }
+    } yield 
+      MovieShowDetailRetrievedDTO(
+        id = movie.id,
+        showTime = showTime.getOrElse(movieShowDetail.showTime.toLocalTime()),
+        price = price.getOrElse(movieShowDetail.price)
+      )
+  }
+
   def getMovieShowTimes(movieId: Int): Future[MovieShowDetailsDTO] = {
     for {
       movieOption <- movieModel.findById(movieId)
@@ -76,5 +108,8 @@ class MovieServiceImpl @Inject()(
       case None => false
     }
   }
+
+  private def checkShowDetailBelongsToMovie(movie: MoviesRow, movieShowDetail: MovieShowDetailsRow): Boolean =
+    movie.id == movieShowDetail.movieId
 
 }

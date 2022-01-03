@@ -26,3 +26,8 @@ case class MovieShowDetailsDTO(
   name: String,
   showDetails: Seq[MovieShowDetailRetrievedDTO]
 )
+
+case class MovieShowDetailEditDTO(
+  showTime: Option[LocalTime],
+  price: Option[BigDecimal]
+)

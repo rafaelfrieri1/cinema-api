@@ -3,10 +3,10 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     /                                                                                          controllers.HomeController.index()
+GET     /                                                                      controllers.HomeController.index()
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file                                                                              controllers.Assets.versioned(path="/public", file: Asset)
+GET     /assets/*file                                                          controllers.Assets.versioned(path="/public", file: Asset)
 
 ###
 #       tags:
@@ -47,7 +47,7 @@ GET     /assets/*file                                                           
 #               schema:
 #                   $ref: '#/definitions/models.ExceptionDTO'
 ###
-POST    /:movieId/movie-show-details                                                               controllers.MoviesController.addMovieShowTime(movieId: Int)
+POST    /:movieId/movie-show-details                                           controllers.MoviesController.addMovieShowTime(movieId: Int)
 
 ###
 #       tags:
@@ -61,7 +61,7 @@ POST    /:movieId/movie-show-details                                            
 #       parameters:
 #           - name: movieId
 #             in: path
-#             description: Id of the movie with the new show time
+#             description: Id of the movie whose show times will be retrieved
 #             required: true
 #             type: int
 #       responses:
@@ -74,4 +74,50 @@ POST    /:movieId/movie-show-details                                            
 #               schema:
 #                   $ref: '#/definitions/models.ExceptionDTO'
 ###
-GET    /:movieId/movie-show-details                                                                controllers.MoviesController.getMovieShowTimes(movieId: Int)
+GET    /:movieId/movie-show-details                                            controllers.MoviesController.getMovieShowTimes(movieId: Int)
+
+###
+#       tags:
+#           - Movies
+#       summary: Edits an existing show time of a movie
+#       description: Returns the edited show time
+#       produces:
+#           - application/json
+#       schemes:
+#           - https
+#       parameters:
+#           - name: movieId
+#             in: path
+#             description: Id of the movie whose show time will be edited
+#             required: true
+#             type: int
+#           - name: movieShowDetailId
+#             in: path
+#             description: Id of the movie show time that will be edited
+#             required: true
+#             type: int
+#           - name: showTime
+#             in: body
+#             description: New show time of the movie
+#             required: false
+#             type: LocalTime
+#           - name: price
+#             in: body
+#             description: New price of the movie show time
+#             required: false
+#             type: BigDecimal
+#       responses:
+#           '200':
+#               description: Movie show time edited
+#               schema:
+#                   type: MovieShowTimeRetrievedDTO
+#           '400':
+#               description: The show time detail selected is not from the movie selected or invalid body is received
+#               schema:
+#                   $ref: '#/definitions/models.ExceptionDTO'
+#           '404':
+#               description: Movie ID or movie show time detail ID not found
+#               schema:
+#                   $ref: '#/definitions/models.ExceptionDTO'
+###
+PUT    /:movieId/movie-show-details/:movieShowTimeId                           controllers.MoviesController.editMovieShowTime(movieId: Int, movieShowTimeId: Int)
