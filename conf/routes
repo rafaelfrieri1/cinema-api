@@ -243,3 +243,44 @@ POST   /:movieId/movie-ratings                                                 c
 #                   $ref: '#/definitions/models.ExceptionDTO'
 ###
 GET   /:movieId/movie-ratings                                                  controllers.MoviesController.getMovieRatings(movieId: Int)
+
+###
+#       tags:
+#           - Movies
+#       summary: Edits an existing rating of a movie
+#       description: Returns the edited rating
+#       produces:
+#           - application/json
+#       schemes:
+#           - https
+#       parameters:
+#           - name: movieId
+#             in: path
+#             description: Id of the movie whose rating will be edited
+#             required: true
+#             type: int
+#           - name: movieRatingId
+#             in: path
+#             description: Id of the movie rating that will be edited
+#             required: true
+#             type: int
+#           - name: rating
+#             in: body
+#             description: New rating of the movie
+#             required: false
+#             type: Int
+#       responses:
+#           '200':
+#               description: Movie rating edited
+#               schema:
+#                   type: MovieRatingRetrievedDTO
+#           '400':
+#               description: The rating selected is not from the movie selected or invalid body is received
+#               schema:
+#                   $ref: '#/definitions/models.ExceptionDTO'
+#           '404':
+#               description: Movie ID or movie rating ID not found
+#               schema:
+#                   $ref: '#/definitions/models.ExceptionDTO'
+###
+PUT    /:movieId/movie-ratings/:movieRatingId                                  controllers.MoviesController.editMovieRating(movieId: Int, movieRatingId: Int)

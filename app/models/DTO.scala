@@ -62,3 +62,16 @@ case class MovieRatingsDTO(
   name: String,
   movieRatings: Seq[MovieRatingRetrievedDTO]
 )
+
+case class MovieRatingEditDTO(
+  rating: Option[Int]
+)
+
+object MovieRatingEditDTO {
+
+  private val validRatings = Set(1, 2, 3, 4, 5)
+
+  def validateRating(movieRating: MovieRatingEditDTO): Boolean =
+    !movieRating.rating.isDefined || validRatings.contains(movieRating.rating.get)
+
+}

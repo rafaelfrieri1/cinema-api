@@ -37,3 +37,15 @@ case class MovieShowDetailNotBelongsToMovieException() extends ApiException {
 
   def errorMessage: String = "error.movie.show.detail.does.not.belongs.to.movie"
 }
+
+case class MovieRatingNotFoundException() extends ApiException {
+  def statusCode: Int = 400
+
+  def errorMessage: String = "error.movie.rating.not.found"
+}
+
+case class MovieRatingNotBelongsToMovieException() extends ApiException {
+  def statusCode: Int = 400
+
+  def errorMessage: String = "error.movie.rating.does.not.belongs.to.movie"
+}

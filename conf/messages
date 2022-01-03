@@ -5,3 +5,5 @@ error.movie.show.detail.already.exists = Movie show detail already exists
 error.movie.show.detail.not.found = Movie show detail not found!
 error.movie.show.detail.does.not.belongs.to.movie = Movie show detail does not belongs to movie!
 error.invalid.value = Invalid value!
+error.movie.rating.not.found = Movie rating not found!
+error.movie.rating.does.not.belongs.to.movie = Movie rating does not belongs to movie!

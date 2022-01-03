@@ -180,6 +180,34 @@ class MovieServiceImpl @Inject()(
     } yield movieRatings
   }
 
+  def editMovieRating(movieId: Int, movieRatingId: Int, rating: Option[Int]): Future[MovieRatingRetrievedDTO] = {
+    for {
+      movieOption <- movieModel.findById(movieId)
+      movie = movieOption.getOrElse(throw new MovieNotFoundException())
+      movieRatingOption <- movieRatingModel.findById(movieRatingId)
+      movieRating = movieRatingOption.getOrElse(throw new MovieRatingNotFoundException())
+      _ <- checkRatingBelongsToMovie(movie, movieRating) match {
+        case true => movieRatingModel.update(
+          movieRatingId,
+          movieRating.copy(
+            rating = rating match {
+              case Some(rating) => BigDecimal(rating)
+              case None => movieRating.rating
+            }
+          )
+        )
+        case false => throw new MovieRatingNotBelongsToMovieException()
+      }
+    } yield
+      MovieRatingRetrievedDTO(
+        id = movieRating.id,
+        rating = rating match {
+          case Some(rating) => BigDecimal(rating)
+          case None => movieRating.rating
+        }
+      )
+  }
+
   private def checkMovieExists(movieId: Int): Future[Boolean] = {
     movieModel.findById(movieId).map {
       case Some(movie) => true
@@ -196,5 +224,8 @@ class MovieServiceImpl @Inject()(
 
   private def checkShowDetailBelongsToMovie(movie: MoviesRow, movieShowDetail: MovieShowDetailsRow): Boolean =
     movie.id == movieShowDetail.movieId
+
+  private def checkRatingBelongsToMovie(movie: MoviesRow, movieRating: MovieRatingsRow): Boolean =
+    movie.id == movieRating.movieId
 
 }
