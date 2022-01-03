@@ -20,4 +20,6 @@ class MovieModelImpl @Inject() (
   private def filterById(id: Int): Query[Movies, MoviesRow, Seq] = movies.filter(m => getId(m) === id)
 
   def add(movie: MoviesRow): Future[Int] = db run ((movies returning movies.map(getId)) += movie)
+
+  def findById(movieId: Int): Future[Option[MoviesRow]] = db run movies.filter(m => m.id === movieId && m.active).result.headOption
 }

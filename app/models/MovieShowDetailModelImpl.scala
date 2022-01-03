@@ -5,6 +5,7 @@ import models.Tables.{MovieShowDetails, MovieShowDetailsRow}
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.jdbc.JdbcProfile
 
+import java.sql.Time
 import scala.concurrent.{ExecutionContext, Future}
 
 class MovieShowDetailModelImpl @Inject() (
@@ -20,4 +21,7 @@ class MovieShowDetailModelImpl @Inject() (
   private def filterById(id: Int): Query[MovieShowDetails, MovieShowDetailsRow, Seq] = movieShowDetails.filter(msd => getId(msd) === id)
 
   def add(movieShowDetail: MovieShowDetailsRow): Future[Int] = db run ((movieShowDetails returning movieShowDetails.map(getId)) += movieShowDetail)
+
+  def findByShowTime(movieShowTime: Time): Future[Option[MovieShowDetailsRow]] =
+    db run movieShowDetails.filter(msd => msd.showTime === movieShowTime && msd.active).result.headOption
 }
