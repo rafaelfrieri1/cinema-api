@@ -14,9 +14,47 @@ trait Tables {
   import slick.jdbc.{GetResult => GR}
 
   /** DDL for all tables. Call .create to execute. */
-  lazy val schema: profile.SchemaDescription = Movies.schema ++ MovieShowDetails.schema ++ PlayEvolutions.schema
+  lazy val schema: profile.SchemaDescription = MovieRatings.schema ++ Movies.schema ++ MovieShowDetails.schema ++ PlayEvolutions.schema
   @deprecated("Use .schema instead of .ddl", "3.0")
   def ddl = schema
+
+  /** Entity class storing rows of table MovieRatings
+   *  @param id Database column id SqlType(INT), AutoInc, PrimaryKey
+   *  @param movieId Database column movie_id SqlType(INT)
+   *  @param rating Database column rating SqlType(DECIMAL)
+   *  @param active Database column active SqlType(BIT), Default(true)
+   *  @param created Database column created SqlType(TIMESTAMP)
+   *  @param deleted Database column deleted SqlType(TIMESTAMP), Default(None) */
+  case class MovieRatingsRow(id: Int, movieId: Int, rating: scala.math.BigDecimal, active: Boolean = true, created: java.sql.Timestamp, deleted: Option[java.sql.Timestamp] = None)
+  /** GetResult implicit for fetching MovieRatingsRow objects using plain SQL queries */
+  implicit def GetResultMovieRatingsRow(implicit e0: GR[Int], e1: GR[scala.math.BigDecimal], e2: GR[Boolean], e3: GR[java.sql.Timestamp], e4: GR[Option[java.sql.Timestamp]]): GR[MovieRatingsRow] = GR{
+    prs => import prs._
+    MovieRatingsRow.tupled((<<[Int], <<[Int], <<[scala.math.BigDecimal], <<[Boolean], <<[java.sql.Timestamp], <<?[java.sql.Timestamp]))
+  }
+  /** Table description of table movie_ratings. Objects of this class serve as prototypes for rows in queries. */
+  class MovieRatings(_tableTag: Tag) extends profile.api.Table[MovieRatingsRow](_tableTag, Some("cinema"), "movie_ratings") {
+    def * = (id, movieId, rating, active, created, deleted) <> (MovieRatingsRow.tupled, MovieRatingsRow.unapply)
+    /** Maps whole row to an option. Useful for outer joins. */
+    def ? = ((Rep.Some(id), Rep.Some(movieId), Rep.Some(rating), Rep.Some(active), Rep.Some(created), deleted)).shaped.<>({r=>import r._; _1.map(_=> MovieRatingsRow.tupled((_1.get, _2.get, _3.get, _4.get, _5.get, _6)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+
+    /** Database column id SqlType(INT), AutoInc, PrimaryKey */
+    val id: Rep[Int] = column[Int]("id", O.AutoInc, O.PrimaryKey)
+    /** Database column movie_id SqlType(INT) */
+    val movieId: Rep[Int] = column[Int]("movie_id")
+    /** Database column rating SqlType(DECIMAL) */
+    val rating: Rep[scala.math.BigDecimal] = column[scala.math.BigDecimal]("rating")
+    /** Database column active SqlType(BIT), Default(true) */
+    val active: Rep[Boolean] = column[Boolean]("active", O.Default(true))
+    /** Database column created SqlType(TIMESTAMP) */
+    val created: Rep[java.sql.Timestamp] = column[java.sql.Timestamp]("created")
+    /** Database column deleted SqlType(TIMESTAMP), Default(None) */
+    val deleted: Rep[Option[java.sql.Timestamp]] = column[Option[java.sql.Timestamp]]("deleted", O.Default(None))
+
+    /** Foreign key referencing Movies (database name movie_id_ratings_fk) */
+    lazy val moviesFk = foreignKey("movie_id_ratings_fk", movieId, Movies)(r => r.id, onUpdate=ForeignKeyAction.Cascade, onDelete=ForeignKeyAction.NoAction)
+  }
+  /** Collection-like TableQuery object for table MovieRatings */
+  lazy val MovieRatings = new TableQuery(tag => new MovieRatings(tag))
 
   /** Entity class storing rows of table Movies
    *  @param id Database column id SqlType(INT), AutoInc, PrimaryKey

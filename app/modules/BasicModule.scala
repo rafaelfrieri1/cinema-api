@@ -16,6 +16,7 @@ class BasicModule(environment: Environment, configuration: Configuration) extend
 
     // Models
     bind[MovieModel].to[MovieModelImpl]
+    bind[MovieRatingModel].to[MovieRatingModelImpl]
     bind[MovieShowDetailModel].to[MovieShowDetailModelImpl]
 
     // Services
