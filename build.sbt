@@ -16,6 +16,7 @@ libraryDependencies ++= Seq(
   guice,
   ws,
   "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test,
+  "org.mockito" % "mockito-core" % "3.6.0" % "test",
   "com.typesafe.play" %% "play-slick" % "4.0.2",
   "com.typesafe.play" %% "play-slick-evolutions" % "4.0.2",
   "com.typesafe.slick" %% "slick-codegen" % "3.3.3",
